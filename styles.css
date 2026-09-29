@@ -121,7 +121,7 @@ svg { width: 18px; height: 18px; stroke-width: 1.8; }
 .provider-row:hover { background: var(--paper-strong); transform: translateX(4px); }
 .rank-number { align-self: start; padding-top: 5px; font-family: Georgia, serif; font-size: 13px; color: var(--muted); }
 .provider-main { display: flex; align-items: center; gap: 15px; min-width: 0; }
-.provider-logo { flex: 0 0 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; color: white; font-family: "Songti SC", Georgia, serif; font-size: 11px; font-weight: 700; }
+.provider-logo { width: 58px; height: 58px; flex: 0 0 58px; display: block; object-fit: contain; object-position: center; border-radius: 14px; padding: 3px; background: #fff; border: 1px solid var(--line); box-sizing: border-box; }
 .logo-red { background: var(--red); }.logo-green { background: var(--green); }.logo-blue { background: var(--blue); }.logo-amber { background: var(--amber); color: var(--ink); }
 .provider-name { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .provider-name h3 { margin: 0; font-size: 17px; line-height: 1.3; }
@@ -455,7 +455,7 @@ svg { width: 18px; height: 18px; stroke-width: 1.8; }
   .sort-control { justify-content: space-between; }
   .provider-row { grid-template-columns: 34px 1fr; gap: 12px; padding: 22px 0; }
   .provider-main { align-items: flex-start; }
-  .provider-logo { flex-basis: 42px; height: 42px; }
+  .provider-logo { width: 50px; height: 50px; flex-basis: 50px; border-radius: 12px; }
   .provider-stats { grid-column: 2; grid-template-columns: repeat(2, 1fr); gap: 13px 8px; }
   .provider-actions { grid-column: 2; grid-row: auto; justify-content: space-between; }
   .provider-actions .button { flex: 1; }
