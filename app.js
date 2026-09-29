@@ -20,22 +20,91 @@ const articles = {
 };
 
 const blogGrid = document.querySelector('#blog-grid');
+const blogPagination = document.querySelector('#blog-pagination');
+
 if (blogGrid && Array.isArray(window.ARTICLE_INDEX)) {
-  blogGrid.innerHTML = window.ARTICLE_INDEX.map(article => `
-    <article class="blog-card">
-      <div class="blog-thumb ${article.thumb}"></div>
-      <div class="blog-content">
-        <span class="blog-tag">${article.category}</span>
-        <h3><a href="articles/${article.slug}.html">${article.title}</a></h3>
-        <p>${article.focus}</p>
-        <div class="blog-meta">
-          <span>${article.date}</span> · <span>${article.read}</span>
-          <a href="articles/${article.slug}.html" class="text-link">阅读文章 <i data-lucide="arrow-right"></i></a>
+  const PAGE_SIZE = 6;
+  let currentPage = 1;
+  const totalArticles = window.ARTICLE_INDEX.length;
+  const totalPages = Math.ceil(totalArticles / PAGE_SIZE);
+
+  function renderArticles(page, scroll = false) {
+    currentPage = page;
+    const startIndex = (page - 1) * PAGE_SIZE;
+    const endIndex = Math.min(startIndex + PAGE_SIZE, totalArticles);
+    const pageArticles = window.ARTICLE_INDEX.slice(startIndex, endIndex);
+
+    blogGrid.innerHTML = pageArticles.map(article => `
+      <article class="blog-card">
+        <div class="blog-thumb ${article.thumb}"></div>
+        <div class="blog-content">
+          <span class="blog-tag">${article.category}</span>
+          <h3><a href="articles/${article.slug}.html">${article.title}</a></h3>
+          <p>${article.focus}</p>
+          <div class="blog-meta">
+            <span>${article.date}</span> · <span>${article.read}</span>
+            <a href="articles/${article.slug}.html" class="text-link">阅读文章 <i data-lucide="arrow-right"></i></a>
+          </div>
         </div>
-      </div>
-    </article>
-  `).join('');
-  if (window.lucide) window.lucide.createIcons();
+      </article>
+    `).join('');
+
+    renderPaginationControls();
+    if (window.lucide) window.lucide.createIcons();
+
+    if (scroll) {
+      const blogSection = document.querySelector('#blog');
+      if (blogSection) {
+        blogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
+
+  function renderPaginationControls() {
+    if (!blogPagination) return;
+    if (totalPages <= 1) {
+      blogPagination.innerHTML = '';
+      return;
+    }
+
+    let buttonsHtml = '';
+
+    // Prev button
+    buttonsHtml += `<button class="page-btn page-nav" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}" aria-label="上一页">
+      <i data-lucide="chevron-left"></i> 上一页
+    </button>`;
+
+    // Page number buttons
+    for (let i = 1; i <= totalPages; i++) {
+      buttonsHtml += `<button class="page-btn page-num ${i === currentPage ? 'active' : ''}" data-page="${i}" aria-label="第 ${i} 页">
+        ${i}
+      </button>`;
+    }
+
+    // Next button
+    buttonsHtml += `<button class="page-btn page-nav" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}" aria-label="下一页">
+      下一页 <i data-lucide="chevron-right"></i>
+    </button>`;
+
+    const startItem = (currentPage - 1) * PAGE_SIZE + 1;
+    const endItem = Math.min(currentPage * PAGE_SIZE, totalArticles);
+
+    blogPagination.innerHTML = `
+      <div class="pagination-controls">${buttonsHtml}</div>
+      <div class="pagination-info">显示第 ${startItem} - ${endItem} 篇 · 共 ${totalArticles} 篇文章 (第 ${currentPage} / ${totalPages} 页)</div>
+    `;
+
+    blogPagination.querySelectorAll('.page-btn:not(:disabled)').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetPage = parseInt(btn.dataset.page, 10);
+        if (targetPage && targetPage !== currentPage) {
+          renderArticles(targetPage, true);
+        }
+      });
+    });
+  }
+
+  renderArticles(1, false);
 }
 
 function openModal(title, kicker, content) {

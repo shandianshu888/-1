@@ -333,6 +333,16 @@ svg { width: 18px; height: 18px; stroke-width: 1.8; }
 .blog-meta { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); border-top: 1px solid #f0eeea; padding-top: 12px; }
 .blog-content h3 a:hover { color: var(--red); }
 
+/* Blog Pagination */
+.blog-pagination { margin-top: 36px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.pagination-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.page-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 38px; height: 38px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line); background: white; color: var(--ink); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s ease; }
+.page-btn:hover:not(:disabled) { border-color: var(--ink); background: var(--paper); }
+.page-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.page-btn svg { width: 15px; height: 15px; }
+.pagination-info { font-size: 12.5px; color: var(--muted); text-align: center; }
+
 /* Standalone SEO article pages */
 .article-page { background: var(--paper); color: var(--ink); }
 .article-header { min-height: 72px; padding: 0 max(24px, calc((100vw - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
