@@ -1,0 +1,13 @@
+{
+  "name": "jichangyan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "机场眼评测、排行、优惠与网络知识网站",
+  "scripts": {
+    "generate:articles": "node generate-articles.js",
+    "check": "node --check app.js && node --check articles.js && node --check generate-articles.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
