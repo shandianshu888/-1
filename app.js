@@ -223,13 +223,13 @@ if (searchInput) {
   searchInput.addEventListener('input', () => {
     const query = searchInput.value.trim().toLowerCase();
     const items = [
-      ['闪电鼠、大佬云、榴莲云机场推荐排名', '#recommend'],
-      ['性价比机场推荐榜', '#budget'],
-      ['机场 7 折优惠码汇总', '#coupons'],
-      ['跑路预警及退款风险提醒', '#warning'],
-      ['IEPL 专线与中转的区别', '#faq'],
-      ['Clash Verge & Sing-box 分流教程', '#blog'],
-      ['客户端下载中心', '#resources']
+      ['闪电鼠、大佬云、榴莲云机场推荐排名', 'recommend.html'],
+      ['性价比机场推荐榜', 'budget.html'],
+      ['机场 7 折优惠码汇总', 'coupons.html'],
+      ['跑路预警及退款风险提醒', 'warning.html'],
+      ['IEPL 专线与中转的区别', 'faq.html'],
+      ['Clash Verge & Sing-box 分流教程', 'blog.html'],
+      ['客户端下载中心', 'resources.html']
     ].concat((window.ARTICLE_INDEX || []).map(article => [article.title, `articles/${article.slug}.html`]))
       .filter(([title]) => title.toLowerCase().includes(query));
 

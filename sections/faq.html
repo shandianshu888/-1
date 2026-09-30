@@ -1,0 +1,111 @@
+<section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow dark">疑难解答 · 快速上手</p>
+          <h2 id="faq-title">机场 FAQ</h2>
+        </div>
+        <p>新手入门常见疑惑解析，帮助你避免避坑、正确选购与使用机场节点。</p>
+      </div>
+
+      <div class="faq-accordion">
+        <details class="faq-item" open>
+          <summary class="faq-question">
+            <span>1. 什么是 IPLC / IEPL 专线？跟公网中转有什么区别？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>IPLC (International Private Leased Circuit) 和 IEPL 是企业级的跨境点对点内网专线。数据从国内入口机房直接通过内网光缆传输到香港或国外出口机房，完全不经过公网防封锁节点。因此其特点是：<strong>高稳定、超低延迟、晚高峰不丢包、不受公网拥堵影响</strong>。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>2. 机场节点的“倍率”是什么意思？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>倍率决定你使用该节点时实际扣除的流量比例。例如：在 1.0x 倍率节点下载 1GB 文件，扣除 1GB 套餐流量；在 0.5x 低倍率节点下载 1GB，仅扣除 0.5GB 流量；而在 2.0x 高倍率（如超高速 IEPL 8K 节点）下载 1GB，则会扣除 2GB 流量。购买和使用时请关注节点列表中标示的倍率。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>6. 原生 IP、住宅 IP 和机房 IP 有什么区别？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>原生 IP 通常指地区归属与实际出口一致；住宅 IP 强调网络类型更接近家庭宽带；机房 IP 来自数据中心。三者并不是绝对的优劣关系，流媒体、AI 服务和支付网站更关注地区一致性、IP 历史信誉与共享程度。选择时应结合实际登录和播放测试，而不是只看单一检测标签。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>7. 为什么节点能打开网页，却无法使用 ChatGPT 或 Claude？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>AI 服务可用性还会受到出口地区、IP 信誉、账号地区、浏览器缓存和服务状态影响。建议先检查账号与官方服务状态，再清理站点缓存，选择地区稳定、共享程度较低的出口。不要在短时间内频繁切换多个国家，以免增加账号验证或风控概率。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>8. 机场订阅链接可以发给朋友或上传到转换网站吗？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>不建议。订阅链接通常相当于访问凭证，泄露后可能被他人导入、消耗流量或获取节点信息。需要转换格式时优先使用可信客户端的本地功能；如果链接已经公开，应立即在机场后台重置订阅地址，并更新自己所有设备上的配置。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>9. Hysteria2、VLESS Reality 和 Trojan 哪个速度更快？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>协议本身不能单独决定速度。Hysteria2 更依赖 UDP 网络质量，VLESS Reality 和 Trojan 的体验也会受到服务器带宽、线路、客户端实现与拥塞情况影响。最可靠的方法是在同一线路、同一时段和同一设备上对比连接成功率、速度、抖动与持续稳定性。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>10. 使用优惠码后，为什么结算价格和页面参考价不同？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>页面折后价按月付原价乘以折扣比例计算，但部分优惠券可能限制新用户、指定套餐、付款周期或使用次数，官网也可能调整原价。付款前应在官方结算页确认优惠码已生效、最终金额正确，并查看续费时是否仍享受相同折扣。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>3. 为什么到了晚高峰（20:00 - 23:00）网速会变慢或掉线？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>晚高峰是国际出口总带宽使用最高峰。如果机场使用的是普通公网直连或单路中转，国内运营商国际出口丢包率会大幅上升。选择具备 <strong>多路 BGP 冗余中转</strong> 或 <strong>IEPL 专线</strong> 的机场可以显著解决晚高峰拥堵问题。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>4. 如何判断一个机场是否有跑路风险？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>跑路前的常见异常信号包括：① 突然发起超低折扣的大额多年付活动 (如 3 折 3 年付)；② TG 交流群开启全员禁言或关闭对话；③ 节点出现大规模长时间断连但客服工单无人回复；④ 域名频繁跳转到未备案页面。发现此类现象建议避免大额续费。</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>5. Clash、Sing-box 与 Shadowrocket 哪个客户端更好用？</span>
+            <i data-lucide="chevron-down" class="faq-icon"></i>
+          </summary>
+          <div class="faq-answer">
+            <p>iOS 设备推荐使用 <strong>Shadowrocket (小火箭)</strong> 或 Quantumult X；Windows 和 Mac 电脑首推 <strong>Clash Verge Rev</strong> (界面现代化且支持 Meta 内核) 或 <strong>Sing-box</strong> (性能优异，内存占用极低)。</p>
+          </div>
+        </details>
+      </div>
+    </section>

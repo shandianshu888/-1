@@ -5,6 +5,7 @@
   "description": "机场眼评测、排行、优惠与网络知识网站",
   "scripts": {
     "generate:articles": "node generate-articles.js",
+    "build:pages": "node build-pages.js",
     "check": "node --check app.js && node --check articles.js && node --check generate-articles.js && node check-site.js"
   },
   "engines": {
