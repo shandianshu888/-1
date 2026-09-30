@@ -36,7 +36,7 @@ if (blogGrid && Array.isArray(window.ARTICLE_INDEX)) {
 
     blogGrid.innerHTML = pageArticles.map(article => `
       <article class="blog-card">
-        <div class="blog-thumb ${article.thumb}"></div>
+        <div class="blog-thumb" style="background-image:url('${article.cover}')" role="img" aria-label="${article.title}封面"></div>
         <div class="blog-content">
           <span class="blog-tag">${article.category}</span>
           <h3><a href="articles/${article.slug}.html">${article.title}</a></h3>
@@ -188,40 +188,6 @@ function fallbackCopy(text, button) {
   document.execCommand('copy');
   document.body.removeChild(input);
   showCopied(button);
-}
-
-// Directory Database Filtering & Search
-const dirFilterBtns = document.querySelectorAll('.dir-btn');
-const dirItems = document.querySelectorAll('.dir-item');
-const dirSearchInput = document.querySelector('#dir-search-input');
-
-if (dirFilterBtns.length && dirItems.length) {
-  dirFilterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      dirFilterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filterDirectory();
-    });
-  });
-
-  if (dirSearchInput) {
-    dirSearchInput.addEventListener('input', filterDirectory);
-  }
-
-  function filterDirectory() {
-    const activeFilter = document.querySelector('.dir-btn.active')?.dataset.dirFilter || 'all';
-    const searchText = (dirSearchInput?.value || '').trim().toLowerCase();
-
-    dirItems.forEach(item => {
-      const type = item.dataset.type || '';
-      const text = item.textContent.toLowerCase();
-      
-      const matchesFilter = activeFilter === 'all' || type.includes(activeFilter);
-      const matchesSearch = !searchText || text.includes(searchText);
-
-      item.style.display = matchesFilter && matchesSearch ? 'block' : 'none';
-    });
-  }
 }
 
 // Search Panel Logic

@@ -24,10 +24,17 @@ const articles = [
   {slug:'troubleshooting-guide',category:'故障排查',title:'机场突然连不上怎么办？从订阅、DNS、客户端到节点的排查顺序',keyword:'机场连不上怎么办',audience:'遇到订阅更新失败、节点超时、网页打不开或速度突然下降的用户',focus:'高效排障应从影响范围最小的环节开始：本地网络、系统时间、订阅、客户端、DNS、单节点、全站服务和账号状态',signals:['其他网站是否能正常直连','多个节点是否同时失败','订阅能否更新且未过期','更换设备后问题是否仍存在'],steps:['确认本地网络和系统时间正常','检查套餐流量、到期时间与订阅','重启客户端并切换一个节点','查看公告后再决定是否联系工单'],mistakes:['一出问题就删除全部配置','同时修改多个设置','使用陌生转换网站修复订阅','没有记录错误信息就提交工单']}
 ];
 
+articles.push(...JSON.parse(fs.readFileSync(path.join(__dirname, 'new-articles.json'), 'utf8')));
+
 const outDir = path.join(__dirname, 'articles');
+const coverDir = path.join(__dirname, 'assets', 'covers');
 fs.mkdirSync(outDir, { recursive: true });
+fs.mkdirSync(coverDir, { recursive: true });
 for (const file of fs.readdirSync(outDir)) {
   if (file.endsWith('.html')) fs.rmSync(path.join(outDir, file));
+}
+for (const file of fs.readdirSync(coverDir)) {
+  if (file.endsWith('.svg')) fs.rmSync(path.join(coverDir, file));
 }
 
 function escapeHtml(value) {
@@ -36,12 +43,50 @@ function escapeHtml(value) {
 
 function list(items) { return `<ul>${items.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`; }
 
+function dateFor(index) {
+  const d = new Date(Date.UTC(2026, 8, 30));
+  d.setUTCDate(d.getUTCDate() - index);
+  return d.toISOString().slice(0, 10);
+}
+
+function makeCover(a, index) {
+  const palettes = [['#111827','#ef5b2a','#f6efe4'],['#092635','#1b8a8f','#e9f3ef'],['#2b174d','#8b5cf6','#f4efff'],['#18240f','#73a942','#f1f5e9'],['#301313','#d95d39','#fff1e8']];
+  const [dark, accent, pale] = palettes[index % palettes.length];
+  const title = escapeHtml(a.title.length > 24 ? `${a.title.slice(0, 24)}…` : a.title);
+  const category = escapeHtml(a.category);
+  const keyword = escapeHtml(a.keyword);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${pale}"/><stop offset="1" stop-color="#fff"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-opacity=".14"/></filter></defs><rect width="1200" height="675" fill="url(#g)"/><circle cx="1040" cy="90" r="210" fill="${accent}" opacity=".14"/><circle cx="1100" cy="600" r="280" fill="${dark}" opacity=".08"/><g filter="url(#s)"><rect x="70" y="65" width="1060" height="545" rx="36" fill="#fff" opacity=".88"/></g><rect x="112" y="112" width="10" height="72" rx="5" fill="${accent}"/><text x="148" y="145" font-family="Microsoft YaHei,Arial,sans-serif" font-size="28" font-weight="700" fill="${accent}">${category}</text><text x="112" y="270" font-family="Microsoft YaHei,Arial,sans-serif" font-size="54" font-weight="800" fill="${dark}">${title}</text><text x="112" y="352" font-family="Microsoft YaHei,Arial,sans-serif" font-size="30" fill="#4b5563">${keyword} · 实用指南</text><path d="M112 430H720" stroke="${accent}" stroke-width="5" stroke-linecap="round"/><g transform="translate(800 382)"><circle cx="120" cy="80" r="105" fill="${accent}" opacity=".16"/><path d="M55 96c52-92 114-92 168 0M72 126h132M120 18v198" fill="none" stroke="${accent}" stroke-width="16" stroke-linecap="round"/></g><text x="112" y="545" font-family="Microsoft YaHei,Arial,sans-serif" font-size="24" fill="#6b7280">机场眼 · 深度测试与选购指南</text></svg>`;
+  fs.writeFileSync(path.join(coverDir, `${a.slug}.svg`), svg, 'utf8');
+}
+
 function buildBody(a) {
+  const unique = a.insight ? `
+    <h2>为什么这个话题现在值得关注</h2>
+    <p>${escapeHtml(a.insight)}</p>
+    <aside class="answer-box"><strong>快速答案：</strong>${escapeHtml(a.focus)}。</aside>
+    <h2>一个典型使用场景</h2>
+    <p>${escapeHtml(a.scenario)}</p>
+    <p><strong>关键实体：</strong>${a.entities.map(escapeHtml).join('、')}。理解这些名词的关系，比单独记住某个产品或协议名称更有用。</p>` : '';
+  const riskDetail = a.slug === 'airport-risk-warning' ? `
+    <h2>机场为什么会跑路或突然停止运营</h2>
+    <p>第一类原因是现金流失衡。低价年付和“终身套餐”会提前透支未来收入，但服务器、专线、流量和售后成本需要持续支付；当新增用户放缓或上游涨价，资金链就可能断裂。第二类原因是上游机房清退、入口线路中断、域名或支付渠道失效，经营者没有备用资源时可能直接停摆。第三类原因是安全事件、攻击、核心成员退出或内部纠纷。还有少数经营者会在大额促销后主动失联，因此促销力度必须和运营历史一起看。</p>
+    <p>“服务停止”不一定等于主观卷款。被动关停、宣布终止业务并安排退款，与清空社群、关闭节点且拒绝回应有本质区别。预警页面应记录可观察事实，不猜测经营者动机；只有官网、节点、订阅、客服等多个信号长期同时异常，才适合提高风险等级。</p>
+    <h2>从哪些信号能看出机场风险正在升高</h2>
+    <p>最值得警惕的是多项异常同时出现：运营时间较短却突然主推三年、五年或终身套餐；全部节点与订阅持续失效；官网停止解析；工单、邮件和社群一起失联；收款主体、域名或上游线路频繁变化；原有套餐在没有公告的情况下被缩短、提倍率或取消退款。单一信号只能提示观察，多个高风险信号连续存在才需要立即止损。</p>
+    <h3>一个可重复使用的风险评分</h3>
+    <ul><li>官网连续多日无法解析：加 3 分。</li><li>全部节点和订阅同时失效：加 3 分。</li><li>客服、工单和社群均无人回应：加 2 分。</li><li>突然推广异常低价的长期套餐：加 2 分。</li><li>频繁更换域名、入口或收款主体：加 1 分。</li><li>持续发布公告且节点逐步恢复：减 2 分。</li></ul>
+    <p>0—2 分更像普通故障；3—5 分适合暂停长期续费并观察；6 分以上应准备备用线路、保存订单和支付证据。评分用于风险管理，不等于对经营方作出法律定性。</p>
+    <h2>十个公开案例如何分级</h2>
+    <ul><li><strong>快帆云、FCCloud、spcloud：</strong>第三方历史数据库记录为官网、节点、订阅或售后同时失联。</li><li><strong>ACA、渡口：</strong>公开社区历史名单或 Issue 标注为跑路、停止运营或基本确认失联。</li><li><strong>龙猫云机场、万达云、赔钱机场：</strong>仅有服务异常或用户反馈，维持观察，不能写成确认跑路。</li><li><strong>efcloud：</strong>社区记录为经营权及套餐变更，应重新评估续费，但不能直接等同跑路。</li><li><strong>白月光机场：</strong>曾因节点不可用被预警，后续恢复，是避免误判短期故障的反例。</li></ul>
+    <p>以上状态核验于 2026-09-30，资料来自公开社区聚合与风险数据库，不代表本站掌握运营主体内部情况。若后续恢复，应及时更正并保留历史时间线。</p>
+    <h2>发现异常后的止损顺序</h2>
+    <ol><li>暂停续费和大额充值，截图保存套餐余额、订单、付款记录与公告。</li><li>切换不同网络和设备排除本地故障，同时检查官网 DNS、订阅拉取和多个地区节点。</li><li>重置在该站复用过的密码；订阅链接疑似泄露时立即更换 Token。</li><li>按照支付渠道规则咨询退款或争议处理，不向陌生“维权群”再次付款。</li><li>启用备用服务，重要工作不要依赖单一机场或单一线路。</li></ol>` : '';
   return `
     <p class="article-lead">搜索“${a.keyword}”时，真正需要解决的不是找到一句绝对答案，而是建立一套可以重复验证的判断方法。本文面向${a.audience}，用尽量清楚的方式拆解关键概念、选择步骤、常见误区和实际检查清单。</p>
     <h2>先给结论：判断重点是什么</h2>
     <p>${a.focus}。任何服务的表现都会受到所在城市、运营商、本地网络、设备、客户端版本和测试时段影响，因此页面参数适合用来初筛，最终决定应建立在自己的实际测试上。</p>
     <p>对普通用户来说，最有效的思路是“先排除明显风险，再验证核心需求”。不要同时追求最低价格、最高速度、无限设备、永久稳定和全部平台解锁。把最重要的两到三个需求排在前面，反而更容易选到适合自己的方案。</p>
+    ${unique}
     <h2>${a.keyword}需要关注的四个信号</h2>
     ${list(a.signals)}
     <p>这四项应组合判断。如果某一项非常突出，其他项目却含糊不清，就需要进一步核对。例如速度很高但没有说明测试时间，或者折扣很低却只支持多年预付，都不适合直接作为购买依据。</p>
@@ -57,6 +102,7 @@ function buildBody(a) {
     <h2>最常见的四个误区</h2>
     ${list(a.mistakes)}
     <p>这些误区的共同点，是用单一指标替代完整判断。解决办法并不复杂：减少预付周期、保留测试记录、保护订阅信息，并准备一个不同线路的备用方案。</p>
+    ${riskDetail}
     <h2>适合新手的检查清单</h2>
     <ul><li>确认官网、套餐和付款页面属于同一服务主体。</li><li>先买月付或小流量套餐，不因折扣直接长期预付。</li><li>在自己的运营商和常用设备上测试。</li><li>核对订阅、倍率、流量重置和设备限制。</li><li>验证最常用的两个实际场景，而不只是测速。</li><li>保存订单记录，并了解工单与退款入口。</li></ul>
     <h2>常见问题</h2>
@@ -68,22 +114,32 @@ function buildBody(a) {
 }
 
 function page(a, index) {
-  const description = `${a.title}。从线路、速度、稳定性、价格、风险与实际测试步骤出发，提供可执行的机场选择与使用建议。`;
+  const description = a.insight ? `${a.title}。围绕${a.keyword}给出原理说明、风险边界、操作步骤、检查信号与常见误区。` : `${a.title}。从线路、速度、稳定性、价格、风险与实际测试步骤出发，提供可执行的机场选择与使用建议。`;
   const body = buildBody(a);
   const faq = [
     {q:'一次测速能代表长期表现吗？',a:'不能。应覆盖不同日期和晚高峰，并结合真实应用体验。'},
     {q:'排名越高就一定越适合我吗？',a:'不一定。排名用于初筛，最终需要结合运营商、设备、预算和用途。'},
     {q:'第一次购买应该选多长周期？',a:'建议优先月付或短周期，验证稳定性后再考虑长期套餐。'}
   ];
-  const schema = { '@context':'https://schema.org','@type':'Article',headline:a.title,description,datePublished:`2026-09-${String(29-index%20).padStart(2,'0')}`,dateModified:'2026-09-29',author:{'@type':'Organization',name:'机场眼'},publisher:{'@type':'Organization',name:'机场眼'},inLanguage:'zh-CN',mainEntityOfPage:`articles/${a.slug}.html` };
+  const published = dateFor(index);
+  const canonical = `https://jichangyan.com/articles/${a.slug}.html`;
+  const image = `https://jichangyan.com/assets/covers/${a.slug}.svg`;
+  const schema = { '@context':'https://schema.org','@type':'Article',headline:a.title,description,image:[image],datePublished:published,dateModified:'2026-09-30',author:{'@type':'Organization',name:'机场眼'},publisher:{'@type':'Organization',name:'机场眼'},inLanguage:'zh-CN',mainEntityOfPage:canonical,about:(a.entities||[a.keyword]).map(name=>({'@type':'Thing',name})) };
   const faqSchema = {'@context':'https://schema.org','@type':'FAQPage',mainEntity:faq.map(x=>({'@type':'Question',name:x.q,acceptedAnswer:{'@type':'Answer',text:x.a}}))};
-  return `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${escapeHtml(description)}"><title>${escapeHtml(a.title)}｜机场眼</title><link rel="stylesheet" href="../styles.css"><script type="application/ld+json">${JSON.stringify(schema)}</script><script type="application/ld+json">${JSON.stringify(faqSchema)}</script></head><body class="article-page"><header class="article-header"><a class="brand" href="../index.html#top"><span class="brand-mark">机</span><span>机场眼</span></a><a class="button button-outline" href="../index.html#blog">返回文章列表</a></header><main class="article-shell"><article class="article-detail"><p class="eyebrow dark">${escapeHtml(a.category)} · 2026-09-29</p><h1>${escapeHtml(a.title)}</h1><p class="article-summary">${escapeHtml(description)}</p>${body}<div class="article-cta"><h2>继续查看机场排名与优惠</h2><p>返回机场眼首页，对比六家专线机场的线路、参考速度、月付价格和 7 折优惠码。</p><a class="button button-primary" href="../index.html#compare">查看机场对比</a></div></article></main><footer class="article-footer">机场眼 · 独立评测 · 持续测速 · 无付费排名</footer></body></html>`;
+  return `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${escapeHtml(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${canonical}"><meta property="og:type" content="article"><meta property="og:title" content="${escapeHtml(a.title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${image}"><meta name="twitter:card" content="summary_large_image"><title>${escapeHtml(a.title)}｜机场眼</title><link rel="stylesheet" href="../styles.css"><script type="application/ld+json">${JSON.stringify(schema)}</script><script type="application/ld+json">${JSON.stringify(faqSchema)}</script></head><body class="article-page"><header class="article-header"><a class="brand" href="../index.html#top"><span class="brand-mark">机</span><span>机场眼</span></a><a class="button button-outline" href="../index.html#blog">返回文章列表</a></header><main class="article-shell"><article class="article-detail"><img class="article-cover" src="../assets/covers/${a.slug}.svg" alt="${escapeHtml(a.title)}封面" width="1200" height="675"><p class="eyebrow dark">${escapeHtml(a.category)} · ${published}</p><h1>${escapeHtml(a.title)}</h1><p class="article-summary">${escapeHtml(description)}</p>${body}<div class="article-cta"><h2>继续查看机场排名与优惠</h2><p>返回机场眼首页，对比六家专线机场的线路、参考速度、月付价格和优惠信息。</p><a class="button button-primary" href="../index.html#compare">查看机场对比</a></div></article></main><footer class="article-footer">机场眼 · 独立评测 · 持续测速 · 无付费排名</footer></body></html>`;
 }
 
-articles.forEach((a, i) => fs.writeFileSync(path.join(outDir, `${a.slug}.html`), page(a, i), 'utf8'));
+articles.forEach((a, i) => { makeCover(a, i); fs.writeFileSync(path.join(outDir, `${a.slug}.html`), page(a, i), 'utf8'); });
 
-const metadata = articles.map((a, i) => ({...a, date:`2026-09-${String(29-i%20).padStart(2,'0')}`,read:`${8 + (i%5)} 分钟阅读`,thumb:`thumb-${(i%3)+1}`}));
+const metadata = articles.map((a, i) => ({...a, date:dateFor(i),read:`${8 + (i%5)} 分钟阅读`,cover:`assets/covers/${a.slug}.svg`}));
 fs.writeFileSync(path.join(__dirname, 'articles.js'), `window.ARTICLE_INDEX = ${JSON.stringify(metadata)};`, 'utf8');
+
+const sitemapItems = [
+  {loc:'https://jichangyan.com/', lastmod:'2026-09-30', priority:'1.0', changefreq:'daily'},
+  ...articles.map((a, i) => ({loc:`https://jichangyan.com/articles/${a.slug}.html`, lastmod:dateFor(i), priority:i < 10 ? '0.9' : '0.8', changefreq:i < 10 ? 'weekly' : 'monthly'}))
+];
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapItems.map(x => `  <url>\n    <loc>${x.loc}</loc>\n    <lastmod>${x.lastmod}</lastmod>\n    <changefreq>${x.changefreq}</changefreq>\n    <priority>${x.priority}</priority>\n  </url>`).join('\n')}\n</urlset>\n`;
+fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), sitemap, 'utf8');
 
 const report = articles.map(a => {
   const text = buildBody(a).replace(/<[^>]+>/g, '').replace(/\s+/g, '');
