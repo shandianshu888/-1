@@ -158,25 +158,26 @@ function closeModal() {
 }
 
 // Copy Coupon Code Logic
-document.querySelectorAll('.copy-btn').forEach(button => {
-  button.addEventListener('click', () => {
-    const code = button.dataset.code;
-    if (!code) return;
-    
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(code).then(() => showCopied(button)).catch(() => fallbackCopy(code, button));
-    } else {
-      fallbackCopy(code, button);
-    }
-  });
+document.addEventListener('click', event => {
+  const button = event.target.closest('.copy-btn');
+  if (!button) return;
+  const code = button.dataset.code;
+  if (!code) return;
+  
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(() => showCopied(button)).catch(() => fallbackCopy(code, button));
+  } else {
+    fallbackCopy(code, button);
+  }
 });
 
 function showCopied(button) {
-  const original = button.textContent;
-  button.textContent = '已复制!';
-  button.classList.add('button-primary');
+  const original = button.innerHTML;
+  button.innerHTML = '已复制!';
+  button.classList.add('copied-active');
   setTimeout(() => {
-    button.textContent = original;
+    button.innerHTML = original;
+    button.classList.remove('copied-active');
   }, 2000);
 }
 
@@ -275,4 +276,38 @@ document.addEventListener('keydown', event => {
   if (modal && !modal.hidden) closeModal();
   if (searchPanel && !searchPanel.hidden) closeSearch();
 });
+
+// Quick Jump Selector for Airport Recommendation
+const jumpSelect = document.querySelector('#airport-jump-select');
+if (jumpSelect) {
+  jumpSelect.addEventListener('change', event => {
+    const targetId = event.target.value;
+    if (targetId) {
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('highlight-card');
+        setTimeout(() => el.classList.remove('highlight-card'), 2000);
+      }
+    }
+  });
+}
+
+// Quick Nav Pill Links
+document.querySelectorAll('.quick-nav-pills a').forEach(link => {
+  link.addEventListener('click', event => {
+    event.preventDefault();
+    const href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      const el = document.querySelector(href);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('highlight-card');
+        setTimeout(() => el.classList.remove('highlight-card'), 2000);
+      }
+    }
+  });
+});
+
+
 

@@ -251,9 +251,29 @@ svg { width: 18px; height: 18px; stroke-width: 1.8; }
 .card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
 .card-header h3 { margin: 0; font-size: 18px; }
 .subtitle { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
-.card-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; background: var(--paper); border-radius: 6px; margin-bottom: 16px; font-size: 12px; }
-.card-metrics span { color: var(--muted); display: block; font-size: 11px; }
+.card-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px; background: var(--paper-strong); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 16px; font-size: 12px; }
+.metric-item { display: flex; flex-direction: column; justify-content: center; }
+.metric-label { color: var(--muted); display: block; font-size: 11px; font-weight: 600; margin-bottom: 3px; }
 .card-metrics strong { color: var(--ink); font-size: 13.5px; font-family: Georgia, serif; }
+
+/* Prominent Price Banner - Priority #1 (一眼最明显) */
+.metric-price { grid-column: 1 / -1; background: #fff5f2; border: 1px solid #ffcfc7; border-radius: 6px; padding: 10px 14px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.metric-price .metric-label { color: var(--red-dark); font-size: 12px; font-weight: 750; margin-bottom: 0; }
+.metric-price-value { display: flex; align-items: baseline; gap: 3px; }
+.price-val { font-family: Georgia, "Songti SC", serif; font-size: 26px !important; font-weight: 800; color: var(--red) !important; line-height: 1; }
+.metric-price-value small { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+.speed-val { color: #1e3a8a !important; font-size: 14px !important; font-weight: 800; }
+.code-val { color: #047857 !important; font-size: 14px !important; font-weight: 800; font-family: monospace, serif; }
+.advantage-val { color: var(--ink) !important; font-size: 13px !important; font-weight: 700; }
+
+/* Interactive Copy Coupon Badge */
+.copy-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border: 1.5px dashed #059669; border-radius: 6px; background: #ecfdf5; color: #047857; cursor: pointer; outline: none; font-family: inherit; transition: all .2s ease; width: fit-content; margin-top: 2px; }
+.copy-badge:hover { background: #d1fae5; border-color: #047857; transform: translateY(-1px); box-shadow: 0 3px 8px rgba(4,120,87,0.18); }
+.copy-badge .code-val { color: #047857 !important; font-size: 14px !important; font-weight: 800; font-family: monospace, serif; }
+.copy-badge .copy-icon-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 10.5px; font-weight: 750; color: #059669; background: rgba(4,120,87,0.12); padding: 1px 6px; border-radius: 4px; }
+.copy-badge.copied-active { background: #047857 !important; border-color: #047857 !important; color: white !important; font-weight: 750; font-size: 12px; }
+
 .card-desc { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
 .recommend-editorial { margin: -12px 0 34px; padding: 24px; border: 1px solid var(--line); background: #faf8f3; border-radius: 10px; }
 .recommend-lead { margin: 0; font-size: 15px; line-height: 1.85; }
@@ -583,3 +603,37 @@ svg { width: 18px; height: 18px; stroke-width: 1.8; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Quick Jump Control & Airport Nav Matrix */
+.quick-jump-box { display: flex; flex-direction: column; gap: 12px; }
+.quick-jump-box > p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.quick-jump-control { display: flex; align-items: center; gap: 10px; background: #ffffff; border: 1.5px solid var(--line); border-radius: 8px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: border-color .2s, box-shadow .2s; }
+.quick-jump-control:focus-within { border-color: var(--red); box-shadow: 0 0 0 3px rgba(225,73,47,0.15); }
+.quick-jump-control label { color: var(--ink); font-size: 13.5px; font-weight: 750; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.quick-jump-control label svg { width: 16px; height: 16px; color: var(--red); }
+.quick-jump-control select { flex: 1; min-width: 0; height: 38px; border: 1px solid var(--line); border-radius: 6px; padding: 0 12px; font-size: 13.5px; font-weight: 600; color: var(--ink); background: var(--paper-strong); cursor: pointer; outline: none; transition: border-color .2s; }
+.quick-jump-control select:hover, .quick-jump-control select:focus { border-color: var(--red); }
+
+.airport-quick-nav { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; margin: 0 0 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+.quick-nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); flex-wrap: wrap; gap: 10px; }
+.quick-nav-title { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 15px; font-weight: 700; }
+.quick-nav-title svg { width: 18px; height: 18px; color: var(--red); }
+.quick-nav-count { font-size: 12px; color: var(--muted); font-weight: 600; }
+.quick-nav-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+.nav-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper-strong); color: var(--ink); font-size: 13px; font-weight: 650; text-decoration: none; transition: all .2s ease; cursor: pointer; }
+.nav-pill:hover { border-color: var(--red); background: white; color: var(--red-dark); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(225,73,47,0.15); }
+.pill-num { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: var(--line); color: var(--muted); font-size: 11px; font-weight: 800; }
+.nav-pill:hover .pill-num { background: var(--red); color: white; }
+.pill-top3 { border-color: rgba(225,73,47,0.3); background: rgba(225,73,47,0.04); }
+.pill-top3 .pill-num { background: var(--red); color: white; }
+.pill-highlight { border-color: rgba(37,99,235,0.3); background: rgba(37,99,235,0.04); }
+.pill-highlight .pill-num { background: #2563eb; color: white; }
+
+@keyframes cardHighlight {
+  0% { box-shadow: 0 0 0 0 rgba(225,73,47,0.7); transform: scale(1.02); }
+  50% { box-shadow: 0 0 25px 6px rgba(225,73,47,0.35); transform: scale(1.02); }
+  100% { box-shadow: var(--shadow); transform: scale(1); }
+}
+.highlight-card { animation: cardHighlight 1.8s ease-in-out; border-color: var(--red) !important; border-width: 2px !important; }
+
+
